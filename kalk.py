@@ -23,14 +23,14 @@ def arvuta():
         nimi = nimi_sisestus.get()
         tulu = float(tulu_sisestus.get())
         kulu = float(kulu_sisestus.get())
-        
+        kirjeldus = kirjeldus_sisestus.get()
         kat = tk_var.get() if tk_var else "Määramata"
         jaak = tulu - kulu
         
         if jaak > 0:
-            tulemus_tekst = f"Tere {nimi}!\nKategooria: {kat}\nSinu jääk on positiivne: {jaak}€"
+            tulemus_tekst = f"Tere {nimi}!\nKategooria: {kat}\nSinu jääk on positiivne: {jaak}€\n Kulude kirjeldus: {kirjeldus}"
         else:
-            tulemus_tekst = f"Tere {nimi}!\nKategooria: {kat}\nJääk on negatiivne: {jaak}€"
+            tulemus_tekst = f"Tere {nimi}!\nKategooria: {kat}\nJääk on negatiivne: {jaak}€\n Kulude kirjeldus: {kirjeldus}"
         
         # Kutsume välja rekursiivse funktsiooni
         tyki_tekst(tulemus_tekst)
@@ -55,6 +55,7 @@ def save_file():
         try:
             tulu = float(tulu_sisestus.get())
             kulu = float(kulu_sisestus.get())
+            kirjeldus_vaartus = kirjeldus_sisestus.get()
             nimi_vaartus = nimi_sisestus.get()
             kat_vaartus = tk_var.get() if tk_var else "Määramata"
             jaak_vaartus = tulu - kulu 
@@ -63,9 +64,9 @@ def save_file():
                 f.write(f"Kasutaja: {nimi_vaartus}\n")
                 f.write(f"Tulu: {tulu} €\n")
                 f.write(f"Kulu: {kulu} €\n")
+                f.write(f"Kirjeldus: {kirjeldus_vaartus}\n")
                 f.write(f"Jääk: {jaak_vaartus} €\n")
                 f.write(f"Kategooria: {kat_vaartus}\n")
-                
             messagebox.showinfo("Tehtud", "Fail salvestati edukalt!")
         except ValueError:
             messagebox.showerror("Viga", "Sisesta tulu ja kulu numbritena!")
@@ -125,11 +126,16 @@ ttk.Label(raam, text="Lisa kulu (€):").pack(pady=5)
 kulu_sisestus = ttk.Entry(raam)
 kulu_sisestus.pack()
 
+ttk.Label(raam, text="Lisa kirjeldus oma kulude kohta: ").pack(pady=5)
+kirjeldus_sisestus = ttk.Entry(raam)
+kirjeldus_sisestus.pack()
+
 nupp = ttk.Button(raam, text="Arvuta tulemus", command=arvuta)
 nupp.pack(pady=20)
 
 vastuse_silt = ttk.Label(raam, text="", font=("Arial", 10, "bold"), justify=LEFT)
 vastuse_silt.pack(pady=10)
+
 
 teksti_ala = tk.Text(raam, height=10, width=50)
 teksti_ala.pack(pady=10)
