@@ -26,7 +26,7 @@ def arvuta_summa_rekursiivne(nimekirja):
     vaartus = kirje["summa"] if kirje["tyyp"] == "tulu" else -kirje["summa"]
     return vaartus + arvuta_summa_rekursiivne(nimekirja[1:])
 
-def arvuta_statistika():
+def arvuta_kategooria():
     stat = {}
     for k in andmed:
         kat = k["kategooria"]
@@ -73,7 +73,7 @@ def tyki_tekst(tekst, indeks=0):
         vastuse_silt.config(text=tekst[:indeks+1])
         raam.after(20, lambda: tyki_tekst(tekst, indeks + 1))
 
-def lisa_nupp_vajutatud():
+def lisa_kulu_tulu():
     try:
         tulu_val = tulu_sisestus.get()
         kulu_val = kulu_sisestus.get()
@@ -118,13 +118,13 @@ def uuenda_tabelit():
         mark = "+" if k['tyyp'] == "tulu" else "-"
         teksti_ala.insert(tk.END, f"{k['tyyp'].upper()} {mark}{k['summa']}€ | {k['kategooria']} | {k['kirjeldus']}\n")
 
-def arvuta_kokkuvote():
+def kuva_andmed():
     if not andmed:
         tyki_tekst("Andmeid pole!")
         return
     
     jaak = arvuta_summa_rekursiivne(andmed)
-    stat = arvuta_statistika()
+    stat = arvuta_kategooria()
     
     tulemus = f"Kogusaldo: {jaak:.2f}€\n"
     tulemus += "Kategooriate kaupa:\n"
@@ -164,13 +164,13 @@ ttk.Label(raam, text="Kirjeldus:").pack(pady=2)
 kirjeldus_sisestus = ttk.Entry(raam)
 kirjeldus_sisestus.pack()
 
-ttk.Button(raam, text="Lisa kirje", command=lisa_nupp_vajutatud).pack(pady=10)
-ttk.Button(raam, text="Arvuta koondvaade", command=arvuta_kokkuvote).pack(pady=5)
+ttk.Button(raam, text="Lisa kirje", command=lisa_kulu_tulu).pack(pady=10)
+ttk.Button(raam, text="Arvuta koondvaade", command=kuva_andmed).pack(pady=5)
 
 f_raam = tk.Frame(raam)
 f_raam.pack(pady=10)
 ttk.Button(f_raam, text="Salvesta CSV", command=salvesta_csv).pack(side=tk.LEFT, padx=5)
-ttk.Button(f_raam, text="Laadi CSV", command=loe_csv).pack(side=tk.LEFT, padx=5)
+ttk.Button(f_raam, text="Laadi CSV/Kuva kõik", command=loe_csv).pack(side=tk.LEFT, padx=5)
 
 vastuse_silt = ttk.Label(raam, text="", font=("Arial", 10, "bold"), justify=tk.LEFT)
 vastuse_silt.pack(pady=10)
