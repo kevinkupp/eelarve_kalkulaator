@@ -9,11 +9,10 @@ KATEGOORIAD = ("Toit", "Transport", "Meelelahutus", "Muu")
 KATEGOORIAD2 = ("Palk", "Toetus", "Annetus", "Muu")
 
 
-def lisa_kirje_andmetesse(summa, kat, kat2, kirjeldus, tyyp):
+def lisa_kirje_andmetesse(summa, valitud_kat, kirjeldus, tyyp):
     kirje = {
         "summa": float(summa),
-        "kategooria": kat,
-        "kategooria2": kat2,
+        "kategooria": valitud_kat,
         "kirjeldus": kirjeldus,
         "tyyp": tyyp
     }
@@ -31,10 +30,8 @@ def arvuta_statistika():
     stat = {}
     for k in andmed:
         kat = k["kategooria"]
-        kat2 = k["kategooria"]
         summa = k["summa"] if k["tyyp"] == "tulu" else -k["summa"]
-        stat[kat] = stat.get(kat, 0) + summa
-        stat[kat2] = stat.get(kat2, 0) + summa
+        stat[kat] = stat.get(kat, 0) + summa # Kasuta 'kat' muutujat
     return stat
 
 
@@ -80,7 +77,7 @@ def lisa_nupp_vajutatud():
     try:
         tulu_val = tulu_sisestus.get()
         kulu_val = kulu_sisestus.get()
-        
+                
         if tulu_val and not kulu_val:
             summa = float(tulu_val)
             tyyp = "tulu"
@@ -90,15 +87,22 @@ def lisa_nupp_vajutatud():
         else:
             messagebox.showwarning("Oota!", "Vali kas kulu või tulu ainult")
             return
+        
+        if tulu_val and not kulu_val:
+            summa = float(tulu_val)
+            tyyp = "tulu"
+            valitud_kat = tulu_muutuja.get()
+        elif kulu_val and not tulu_val:
+            summa = float(kulu_val)
+            tyyp = "kulu"
+            valitud_kat = kulu_muutuja.get()
 
         if summa <= 0:
             raise ValueError
-        
-        kat = kulu_muutuja.get()
-        kat2 = tulu_muutuja.get()
+               
         kirjeldus = kirjeldus_sisestus.get()
         
-        lisa_kirje_andmetesse(summa, kat, kat2, kirjeldus, tyyp)
+        lisa_kirje_andmetesse(summa, valitud_kat, kirjeldus, tyyp)
         uuenda_tabelit()
         
         tulu_sisestus.delete(0, tk.END)
@@ -124,12 +128,9 @@ def arvuta_kokkuvote():
     
     tulemus = f"Kogusaldo: {jaak:.2f}€\n"
     tulemus += "Kategooriate kaupa:\n"
-    for kat, s in stat.items():
-        tulemus += f" - {kat}: {s:.2f}€\n"
-        
-    for kat2, s in stat.items():
-        tulemus += f" - {kat2}: {s:.2f}€\n"
-    
+    for valitud_kat, s in stat.items():
+        tulemus += f" - {valitud_kat}: {s:.2f}€\n"   
+   
     tyki_tekst(tulemus)
 
 
